@@ -11,7 +11,7 @@
 
 ## 🌐 Live Demo
 
-**[Try it live →](https://reyansh47.github.io/Asset-Forge---Premium-Banner-Editor/x-banner.html)**
+**[Try it live →](https://reyansh47.github.io/Asset-Forge---Premium-Banner-Editor/)**
 
 ---
 
