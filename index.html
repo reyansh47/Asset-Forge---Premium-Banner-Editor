@@ -1819,8 +1819,8 @@
             // Mobile auto-zoom
             if (window.innerWidth < 900) {
                 // Determine a safe zoom level for mobile screens (e.g. 0.3 or 0.4)
-                let newZoom = (window.innerWidth - 40) / 1500;
-                state.zoomValue = Math.max(0.1, newZoom);
+                resetZoom();
+                
             }
             
             // Build the first UI screen
