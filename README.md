@@ -3,15 +3,15 @@
 > A fully-featured, zero-dependency social media image editor that runs entirely in a single HTML file. No React. No backend. No build step. Just open and create.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](https://opensource.org/licenses/MIT)
-[![Single File](https://img.shields.io/badge/Size-Single%20HTML%20File-blueviolet)](./x-banner.html)
-[![No Dependencies](https://img.shields.io/badge/Backend-None%20Required-brightgreen)](./x-banner.html)
-[![Fonts](https://img.shields.io/badge/Fonts-20%20Google%20Fonts-orange)](./x-banner.html)
+[![Single File](https://img.shields.io/badge/Size-Single%20HTML%20File-blueviolet)](./index.html)
+[![No Dependencies](https://img.shields.io/badge/Backend-None%20Required-brightgreen)](./index.html)
+[![Fonts](https://img.shields.io/badge/Fonts-20%20Google%20Fonts-orange)](./index.html)
 
 ---
 
 ## 🌐 Live Demo
 
-**[Try it live →](https://reyansh47.github.io/Asset-Forge---Premium-Banner-Editor/x-banner.html)**
+**[Try it live →](https://reyansh47.github.io/Asset-Forge---Premium-Banner-Editor/index.html)**
 
 ---
 
@@ -101,7 +101,7 @@ Contextual floating toolbar that appears when a layer is selected:
 ### Option 1 — Just open it
 ```bash
 # No install needed. Download and open directly:
-open x-banner.html
+open index.html
 ```
 
 ### Option 2 — Clone and run locally
@@ -110,9 +110,9 @@ git clone https://github.com/reyansh47/Asset-Forge---Premium-Banner-Editor.git
 cd Asset-Forge---Premium-Banner-Editor
 
 # Open directly in browser
-start x-banner.html       # Windows
-open x-banner.html        # macOS
-xdg-open x-banner.html   # Linux
+start index.html       # Windows
+open index.html        # macOS
+xdg-open index.html   # Linux
 ```
 
 ### Option 3 — Serve with any static server
@@ -131,7 +131,7 @@ npx serve .
 This is intentionally a **zero-build, zero-dependency** project:
 
 ```
-x-banner.html        ← The entire application (HTML + CSS + JS)
+index.html        ← The entire application (HTML + CSS + JS)
 ```
 
 **External dependencies loaded via CDN (no install):**
