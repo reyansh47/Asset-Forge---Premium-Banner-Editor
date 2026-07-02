@@ -1,0 +1,2 @@
+# Placeholder to ensure public/images/ directory exists locally.
+# Everything inside this directory is ignored by Git via .gitignore.
