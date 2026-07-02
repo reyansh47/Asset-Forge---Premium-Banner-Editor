@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SovereignOne - Social Media Pin Generator</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- html2canvas for image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-color: #121212;
+            --border-color: rgba(212, 175, 55, 0.15);
+            --gold: #d4af37;
+            --text-white: #ffffff;
+            --text-gray: #8f8f8f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 3rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        header p {
+            font-size: 1rem;
+            color: var(--text-gray);
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+
+        .global-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-white);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            border-color: var(--gold);
+            background-color: rgba(212, 175, 55, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: var(--gold);
+            border-color: var(--gold);
+            color: #000000;
+        }
+
+        .btn-primary:hover {
+            background-color: #ffffff;
+            border-color: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        /* ═══════════ PINS GRID ═══════════ */
+        .pins-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1400px;
+            margin-top: 1rem;
+            justify-items: center;
+        }
+
+        .pin-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* The Canvas Card - aspect ratio 9:16 (400px x 711px) */
+        .pin-card {
+            width: 400px;
+            height: 711px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3.5rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            /* Subpixel rendering fix for html2canvas */
+            transform: translateZ(0);
+        }
+
+        /* BG Glow effects to make them look premium */
+        .ambient-orb {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb-center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orb-top {
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Subtle grid pattern overlay */
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 25px 25px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Minimalist premium borders */
+        .border-frame {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.08);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Header typography */
+        .pin-header {
+            position: relative;
+            z-index: 10;
+            margin-top: 1rem;
+        }
+
+        .pin-category {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--gold);
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+
+        .pin-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 800;
+            line-height: 1.25;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        /* Body typography */
+        .pin-body {
+            position: relative;
+            z-index: 10;
+            margin-bottom: auto;
+            margin-top: 2rem;
+        }
+
+        .pin-divider {
+            width: 40px;
+            height: 2px;
+            background-color: var(--gold);
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .pin-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Footer web placement */
+        .pin-footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .pin-website {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: rgba(255, 255, 255, 0.45);
+            transition: color 0.3s;
+        }
+
+        /* ═══════════ INDIVIDUAL PIN STYLES ═══════════ */
+        /* Pin 1: Charcoal, Gold Orb, Gold Brand */
+        #pin-1 {
+            background-color: #141414;
+        }
+        #pin-1 .ambient-orb {
+            background: var(--gold);
+            opacity: 0.12;
+        }
+
+        /* Pin 2: Deep Black, Monochrome high contrast */
+        #pin-2 {
+            background-color: #030303;
+        }
+        #pin-2 .ambient-orb {
+            background: #ffffff;
+            opacity: 0.05;
+        }
+
+        /* Pin 3: Dark Navy, Deep blue glow */
+        #pin-3 {
+            background-color: #050a1c;
+        }
+        #pin-3 .ambient-orb {
+            background: #2a6fdb;
+            opacity: 0.15;
+        }
+
+        /* Pin 4: Dark Slate/Obsidian, tech grid */
+        #pin-4 {
+            background-color: #0b0c10;
+        }
+        #pin-4 .ambient-orb {
+            background: #1f2833;
+            opacity: 0.2;
+        }
+
+        /* Pin 5: Deep Charcoal, warm ambient */
+        #pin-5 {
+            background-color: #1a1a1a;
+        }
+        #pin-5 .ambient-orb {
+            background: #c88a36;
+            opacity: 0.1;
+        }
+
+        /* Loading indicator */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--gold);
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SovereignOne</h1>
+        <p>Premium Social Media Pin Generator</p>
+        <div class="global-actions">
+            <button class="btn btn-primary" onclick="downloadAll()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download All 5 Pins
+            </button>
+            <a href="/" class="btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Back to Site
+            </a>
+        </div>
+    </header>
+
+    <div class="pins-container">
+        <!-- Pin 1 -->
+        <div class="pin-wrapper">
+            <div class="pin-card" id="pin-1">
+                <div class="ambient-orb orb-center"></div>
+                <div class="grid-overlay"></div>
+                <div class="border-frame"></div>
+                
+                <div class="pin-header">
+                    <span class="pin-category">Protocol 01</span>
+                    <h2 class="pin-title">Dopamine Detox That Actually Works</h2>
+                </div>
+
+                <div class="pin-body">
+                    <div class="pin-divider"></div>
+                    <p class="pin-text">Remove cheap stimulation. Fix sleep. Move your body. Hold it 21 days. Your brain will recalibrate.</p>
+                </div>
+
+                <div class="pin-footer">
+                    <span class="pin-website">thesovereignone.tech</span>
+                </div>
+            </div>
+            <button class="btn" onclick="downloadPin('pin-1', 'dopamine_detox_works.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Pin 1
+            </button>
+        </div>
+
+        <!-- Pin 2 -->
+        <div class="pin-wrapper">
+            <div class="pin-card" id="pin-2">
+                <div class="ambient-orb orb-center"></div>
+                <div class="grid-overlay"></div>
+                <div class="border-frame"></div>
+                
+                <div class="pin-header">
+                    <span class="pin-category">Biology 02</span>
+                    <h2 class="pin-title">Increase Testosterone Naturally</h2>
+                </div>
+
+                <div class="pin-body">
+                    <div class="pin-divider"></div>
+                    <p class="pin-text">Sleep 8 hours. Lift heavy. Cut seed oils. Manage your sexual energy. No supplement beats these four.</p>
+                </div>
+
+                <div class="pin-footer">
+                    <span class="pin-website">thesovereignone.tech</span>
+                </div>
+            </div>
+            <button class="btn" onclick="downloadPin('pin-2', 'increase_testosterone.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Pin 2
+            </button>
+        </div>
+
+        <!-- Pin 3 -->
+        <div class="pin-wrapper">
+            <div class="pin-card" id="pin-3">
+                <div class="ambient-orb orb-center"></div>
+                <div class="grid-overlay"></div>
+                <div class="border-frame"></div>
+                
+                <div class="pin-header">
+                    <span class="pin-category">Monk Mode 03</span>
+                    <h2 class="pin-title">Celibacy Benefits For Men</h2>
+                </div>
+
+                <div class="pin-body">
+                    <div class="pin-divider"></div>
+                    <p class="pin-text">30 days in — sharper mind, better recovery, stronger presence. The energy has to go somewhere. Direct it.</p>
+                </div>
+
+                <div class="pin-footer">
+                    <span class="pin-website">thesovereignone.tech</span>
+                </div>
+            </div>
+            <button class="btn" onclick="downloadPin('pin-3', 'celibacy_benefits.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Pin 3
+            </button>
+        </div>
+
+        <!-- Pin 4 -->
+        <div class="pin-wrapper">
+            <div class="pin-card" id="pin-4">
+                <div class="ambient-orb orb-center"></div>
+                <div class="grid-overlay"></div>
+                <div class="border-frame"></div>
+                
+                <div class="pin-header">
+                    <span class="pin-category">Neuroscience 04</span>
+                    <h2 class="pin-title">Why You Have No Motivation</h2>
+                </div>
+
+                <div class="pin-body">
+                    <div class="pin-divider"></div>
+                    <p class="pin-text">Your reward system is burnt out from cheap stimulation. This isn’t a mindset problem. It’s neurochemical.</p>
+                </div>
+
+                <div class="pin-footer">
+                    <span class="pin-website">thesovereignone.tech</span>
+                </div>
+            </div>
+            <button class="btn" onclick="downloadPin('pin-4', 'no_motivation_why.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Pin 4
+            </button>
+        </div>
+
+        <!-- Pin 5 -->
+        <div class="pin-wrapper">
+            <div class="pin-card" id="pin-5">
+                <div class="ambient-orb orb-center"></div>
+                <div class="grid-overlay"></div>
+                <div class="border-frame"></div>
+                
+                <div class="pin-header">
+                    <span class="pin-category">Routine 05</span>
+                    <h2 class="pin-title">Dopamine Detox Morning Routine</h2>
+                </div>
+
+                <div class="pin-body">
+                    <div class="pin-divider"></div>
+                    <p class="pin-text">No phone first hour. Cold water. Sunlight. Eat clean. Your baseline determines everything.</p>
+                </div>
+
+                <div class="pin-footer">
+                    <span class="pin-website">thesovereignone.tech</span>
+                </div>
+            </div>
+            <button class="btn" onclick="downloadPin('pin-5', 'dopamine_detox_morning.png')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Pin 5
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading screen -->
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loading-text">Generating high-res PNG...</div>
+    </div>
+
+    <script>
+        async function downloadPin(elementId, filename) {
+            const card = document.getElementById(elementId);
+            const loader = document.getElementById('loading');
+            const loaderText = document.getElementById('loading-text');
+            
+            loaderText.innerText = `Generating high-res PNG...`;
+            loader.style.display = 'flex';
+            
+            // Wait brief moment for loader display
+            await new Promise(r => setTimeout(r, 100));
+
+            try {
+                // Set scale to 3 for Ultra High Res (1200px x 2133px or equivalent Retina scaling)
+                // Use scrollX/scrollY 0 to avoid canvas cutoffs
+                const canvas = await html2canvas(card, {
+                    scale: 3,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: document.documentElement.offsetWidth,
+                    windowHeight: document.documentElement.offsetHeight
+                });
+
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error('Error generating image:', err);
+                alert('Failed to generate image. Please try again.');
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        async function downloadAll() {
+            const pins = [
+                { id: 'pin-1', file: 'dopamine_detox_works.png' },
+                { id: 'pin-2', file: 'increase_testosterone.png' },
+                { id: 'pin-3', file: 'celibacy_benefits.png' },
+                { id: 'pin-4', file: 'no_motivation_why.png' },
+                { id: 'pin-5', file: 'dopamine_detox_morning.png' }
+            ];
+
+            const loader = document.getElementById('loading');
+            const loaderText = document.getElementById('loading-text');
+            loader.style.display = 'flex';
+
+            for (let i = 0; i < pins.length; i++) {
+                loaderText.innerText = `Generating Pin ${i + 1} of 5...`;
+                // Add minor delay between captures to prevent freezing
+                await new Promise(r => setTimeout(r, 200));
+                
+                try {
+                    const card = document.getElementById(pins[i].id);
+                    const canvas = await html2canvas(card, {
+                        scale: 3,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: null,
+                        scrollX: 0,
+                        scrollY: 0
+                    });
+
+                    const link = document.createElement('a');
+                    link.download = pins[i].file;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (err) {
+                    console.error(`Error generating ${pins[i].file}:`, err);
+                }
+            }
+
+            loader.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
