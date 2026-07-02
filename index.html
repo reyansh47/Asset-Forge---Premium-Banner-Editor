@@ -3703,14 +3703,17 @@
 
         // ═══════════ ZOOM CONTROLLER ═══════════
         function adjustZoom(amount) {
-            state.zoom = Math.min(1.5, Math.max(0.3, state.zoom + amount));
+            state.zoom = Math.min(1.5, Math.max(0.1, state.zoom + amount));
             updateScaleUI();
         }
 
         function resetZoom() {
             // Find zoom that fits within screen height and width
             const viewHeight = document.getElementById('canvasArea').clientHeight - 100;
-            const ratioZoom = viewHeight / state.canvasHeight;
+            const viewWidth = document.getElementById('canvasArea').clientWidth - 40;
+            const ratioZoomH = viewHeight / state.canvasHeight;
+            const ratioZoomW = viewWidth / state.canvasWidth;
+            const ratioZoom = Math.min(ratioZoomH, ratioZoomW);
             state.zoom = Math.min(1.0, parseFloat(ratioZoom.toFixed(2)));
             updateScaleUI();
         }
