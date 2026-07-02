@@ -672,6 +672,7 @@
 
         /* ═══════════ CANVAS WORKSPACE AREA ═══════════ */
         .canvas-area {
+                touch-action: none;
             flex: 1;
             background-color: #030303;
             background-image: 
@@ -1224,6 +1225,7 @@
                 transform: translateY(0);
             }
             .canvas-area {
+                touch-action: none;
                 padding: 1rem;
                 height: calc(100vh - 110px - 60px);
             }
@@ -1462,7 +1464,7 @@
         </div>
 
         <!-- CANVAS WORKSPACE VIEWPORT -->
-        <div class="canvas-area" id="canvasArea" onmousedown="deselectLayers(event)">
+        <div class="canvas-area" id="canvasArea" onpointerdown="deselectLayers(event)">
             
             <div class="canvas-viewport" id="canvasViewport">
                 <div class="banner-canvas ratio-x" id="bannerCanvas">
@@ -2613,7 +2615,7 @@
                         const handle = document.createElement('div');
                         handle.className = `transform-handle handle-${h}`;
                         handle.dataset.handle = h;
-                        handle.addEventListener('mousedown', (e) => {
+                        handle.addEventListener('pointerdown', (e) => {
                             e.stopPropagation();
                             initTransform('resize', h, e, layer);
                         });
@@ -2623,7 +2625,7 @@
                     // Rotation handle
                     const rotHandle = document.createElement('div');
                     rotHandle.className = 'transform-handle handle-rotate';
-                    rotHandle.addEventListener('mousedown', (e) => {
+                    rotHandle.addEventListener('pointerdown', (e) => {
                         e.stopPropagation();
                         initTransform('rotate', null, e, layer);
                     });
@@ -2634,7 +2636,7 @@
                     delBtn.className = 'transform-btn btn-delete';
                     delBtn.innerHTML = '×';
                     delBtn.title = 'Delete Layer';
-                    delBtn.addEventListener('mousedown', (e) => {
+                    delBtn.addEventListener('pointerdown', (e) => {
                         e.stopPropagation();
                         deleteLayer(layer.id);
                     });
@@ -2644,7 +2646,7 @@
                 }
 
                 // Add drag listener on mouse down
-                wrapper.addEventListener('mousedown', (e) => {
+                wrapper.addEventListener('pointerdown', (e) => {
                     if (e.target.classList.contains('transform-handle') || e.target.classList.contains('transform-btn') || e.target.getAttribute('contenteditable') === 'true') {
                         return;
                     }
@@ -2689,8 +2691,8 @@
                 zoom: state.zoom
             };
             
-            document.addEventListener('mousemove', handleTransformMove);
-            document.addEventListener('mouseup', handleTransformUp);
+            document.addEventListener('pointermove', handleTransformMove);
+            document.addEventListener('pointerup', handleTransformUp);
         }
 
         function handleTransformMove(e) {
@@ -2791,8 +2793,8 @@
         }
 
         function handleTransformUp() {
-            document.removeEventListener('mousemove', handleTransformMove);
-            document.removeEventListener('mouseup', handleTransformUp);
+            document.removeEventListener('pointermove', handleTransformMove);
+            document.removeEventListener('pointerup', handleTransformUp);
             
             if (activeTransform) {
                 const layer = state.layers.find(l => l.id === activeTransform.layerId);
@@ -3225,7 +3227,7 @@
             // Sync slider numerical texts instantly without saveHistory (smooth sliding)
             renderCanvas();
             
-            // Save history on change/mouseup event
+            // Save history on change/pointerup event
             clearTimeout(window.bgTimer);
             window.bgTimer = setTimeout(() => {
                 saveHistory();
