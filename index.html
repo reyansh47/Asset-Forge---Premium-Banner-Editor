@@ -206,7 +206,7 @@
         /* ═══════════ MAIN WORKSPACE ═══════════ */
         .workspace {
             display: flex;
-            flex: 1;
+            flex: 0 0 72px;
             height: calc(100vh - 64px);
             overflow: hidden;
             position: relative;
@@ -307,7 +307,7 @@
 
         .drawer-content {
             padding: 1.25rem;
-            flex: 1;
+            flex: 0 0 72px;
         }
 
         /* ═══════════ ALIGNMENT TOOLBAR ═══════════ */
@@ -457,7 +457,7 @@
         }
 
         input[type="range"] {
-            flex: 1;
+            flex: 0 0 72px;
             accent-color: var(--royal-gold);
             height: 3px;
             background: rgba(255,255,255,0.08);
@@ -673,7 +673,7 @@
         /* ═══════════ CANVAS WORKSPACE AREA ═══════════ */
         .canvas-area {
                 touch-action: none;
-            flex: 1;
+            flex: 0 0 72px;
             background-color: #030303;
             background-image: 
                 radial-gradient(circle at 50% 50%, rgba(15, 15, 15, 0.8) 0%, rgba(3, 3, 3, 1) 100%),
@@ -926,7 +926,7 @@
         }
 
         .inspector-panel {
-            flex: 1;
+            flex: 0 0 72px;
             overflow-y: auto;
             border-bottom: 1px solid var(--royal-border);
             padding: 1.25rem;
@@ -950,7 +950,7 @@
         }
 
         .layers-list {
-            flex: 1;
+            flex: 0 0 72px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -1069,7 +1069,7 @@
         }
 
         .align-btn {
-            flex: 1;
+            flex: 0 0 72px;
             height: 32px;
             background: rgba(5,5,5,0.4);
             border: none;
@@ -1158,7 +1158,7 @@
                 gap: 10px;
                 justify-content: space-between;
             }
-            .logo-text p { display: none; }
+            .logo-text { display: none; }
             .header-actions .btn {
                 padding: 0.4rem;
                 font-size: 0;
@@ -1192,12 +1192,12 @@
                 flex-direction: row;
                 border-right: none;
                 border-top: 1px solid var(--royal-border);
-                justify-content: space-around;
+                justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
                 z-index: 100;
                 padding: 0;
             }
             .tab-btn {
-                flex: 1;
+                flex: 0 0 72px;
                 height: 100%;
                 border-radius: 0;
             }
