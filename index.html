@@ -695,6 +695,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .banner-canvas {
@@ -1212,10 +1213,12 @@
                 border-right: none;
                 border-top: 1px solid var(--royal-border);
                 transform: translateY(100%);
-                transition: transform 0.3s ease;
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
                 z-index: 90;
                 background: rgba(18, 18, 18, 0.98);
                 backdrop-filter: blur(10px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .sidebar-drawer:not(.collapsed) {
                 transform: translateY(0);
@@ -1231,9 +1234,11 @@
                 bottom: 60px;
                 width: 100%;
                 transform: translateX(100%);
-                transition: transform 0.3s ease;
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
                 z-index: 95;
                 background: rgba(18, 18, 18, 0.98);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .right-sidebar.mobile-open {
                 transform: translateX(0);
